@@ -6,6 +6,7 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException, UploadFile
 from pydantic import BaseModel
 from starlette.responses import FileResponse
+from random import choice
 
 from fastapi_workshop.card_data_helper import Card, cards, cards_dict
 
@@ -14,13 +15,13 @@ This is the list of functions that we will be showing off.
 It uses markdown to render the text so anything you can do in markdown you can do here.
 
 ## Treasure
-* **Lay Treasure** - (_not implemented_)
+* **Lay Treasure** - what makes me a good demoman???
 * **search for treasure** - gives how far away from treasure
 
 ## Cards
 * **all cards** - gets all the cards.
 * **cards**  - gets a specified card
-* **random card** - (_not implemented_)
+* **random card** - white eyes blue dragon
 
 ## File
 * **upload file**  - Lets you upload a file
@@ -95,6 +96,16 @@ def search_for_treasure(x: int, y: int) -> TreasureResult:
     else:
         return TreasureResult(distance_away=distance(given_location, SECRET_LOCATION))
 
+@app.post("/fart.wav", response_model_exclude_none=True, tags=["Treasure"])
+def fjeijfailajkdfaljefliajflksdjf(x: int, y: int) -> str:
+    """
+    lays a LANDMINE KABOOM
+    """
+    global SECRET_LOCATION
+    given_location = (x, y)
+    SECRET_LOCATION = given_location
+    return "[bomb has been planted]"
+
 
 @app.get("/all-cards", tags=["Cards"])
 def get_all_cards() -> list[Card]:
@@ -110,6 +121,14 @@ def get_all_cards() -> list[Card]:
 def get_card(card_name: str) -> Card:
     """Gets a single card from the card dictionary. Fast."""
     return cards_dict[card_name]
+
+@app.get("/random-deck", tags=["Cards"])
+def random_deck() -> list[str]:
+    to_return = []
+    for i in range(60):
+        to_return.append(choice(cards).name)
+    return to_return
+
 
 
 class UploadFileResponse(BaseModel):
